@@ -21,6 +21,10 @@ public class CrimeLab {
         return sCrimeLab;
     }
 
+    public void addCrime(Crime c) {
+        mCrimes.add(c);
+    }
+
     private CrimeLab(Context context) {
         mAppContext = context;
         mCrimes = new ArrayList<>();
