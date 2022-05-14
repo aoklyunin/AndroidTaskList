@@ -1,6 +1,10 @@
 package com.example.myapplication.gui;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +54,8 @@ public class TaskListFragment extends Fragment {
      */
     private TaskAdapter adapter;
 
+    private final String KEY_USERNAME = "com.example.myapplication.username";
+
     /**
      * Создаение представления
      *
@@ -69,10 +77,17 @@ public class TaskListFragment extends Fragment {
         Button sendButton = view.findViewById(R.id.auth_btn);
         // вешаем обработчик нажатия
         sendButton.setOnClickListener(view1 -> {
-            // содаём асинхронную задачу
-            SendAsyncTask sendTask = new SendAsyncTask();
-            // запускаем отправку задач
-            sendTask.execute();
+            // получаем общее хранилище
+            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+            // получаем имя пользователя из хранилища
+            String username = sharedPref.getString(KEY_USERNAME, "");
+            // если имя пустое
+            if (username.equals(""))
+                // запускаем диалог ввода имени
+                showUserDialog(getContext());
+            else
+                // запускаем асинхронную отправку с созранённым именем пользователя
+                sendAsync(username);
         });
         // обновляем интерфейс
         updateUI();
@@ -101,17 +116,72 @@ public class TaskListFragment extends Fragment {
     }
 
     /**
+     * Асинзронная отправка задач на сервер
+     *
+     * @param username - имя пользователя
+     */
+    private void sendAsync(String username) {
+        // содаём асинхронную задачу
+        SendAsyncTask sendTask = new SendAsyncTask();
+        // запускаем отправку задач
+        sendTask.execute(username);
+    }
+
+    /**
+     * Показать диалог имени пользователя
+     *
+     * @param context - контекст приложения
+     */
+    private void showUserDialog(Context context) {
+        // Получаем вид с файла prompt.xml, который применим для диалогового окна:
+        LayoutInflater li = LayoutInflater.from(context);
+        // получаем представление
+        View promptsView = li.inflate(R.layout.prompt, null);
+        //Создаем AlertDialog
+        AlertDialog.Builder mDialogBuilder = new AlertDialog.Builder(context);
+        //Настраиваем prompt.xml для нашего AlertDialog:
+        mDialogBuilder.setView(promptsView);
+        //Настраиваем отображение поля для ввода текста в открытом диалоге:
+        final EditText userInput = (EditText) promptsView.findViewById(R.id.input_text);
+        //Настраиваем сообщение в диалоговом окне:
+        mDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        (dialog, id) -> {
+                            // получаем имя пользователя
+                            String username = userInput.getText().toString();
+                            // получаем общее хранилище
+                            SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+                            // получаем редактор хранилища
+                            SharedPreferences.Editor editor = sharedPref.edit();
+                            // добавляем с его помощью значение имени пользователя
+                            editor.putString(KEY_USERNAME, username);
+                            // применяем все изменения
+                            editor.apply();
+                            // отправляем задачи
+                            sendAsync(username);
+                        })
+                .setNegativeButton("Отмена",
+                        (dialog, id) -> dialog.cancel());
+
+        // Создаем диалог
+        AlertDialog alertDialog = mDialogBuilder.create();
+        // и отображаем его
+        alertDialog.show();
+    }
+
+    /**
      * Класс асинхронной задачи для отправки
      */
-    private class SendAsyncTask extends AsyncTask<Void, Void, Void> {
+    private class SendAsyncTask extends AsyncTask<String, Void, Void> {
         /**
          * Фоновое выполнение
          *
-         * @param voids - аргументов нет
+         * @param args - аргумент 1 - имя польдователя
          * @return - возвращаем null
          */
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected Void doInBackground(String... args) {
             // создаём клиент retrofit
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://buran-it-sch.herokuapp.com/")
@@ -126,7 +196,7 @@ public class TaskListFragment extends Fragment {
             List<Task> tasks = taskDBHolder.getTasks();
             // формируем запрос
             Call<ServerResponse> serverCall = api.add(new TasksRequest(
-                    "droid", tasks
+                    args[0], tasks
             ));
             // выполняем запрос
             serverCall.enqueue(new Callback<ServerResponse>() {
@@ -138,9 +208,11 @@ public class TaskListFragment extends Fragment {
                     if (serverResponse.getStatus().equals("ok"))
                         // выводим сообщение об удачной отправке
                         Toast.makeText(getContext(), "Задачи отправлены", Toast.LENGTH_SHORT).show();
-                    else
+                    else {
                         // выводим сообщение об ошибке
                         Toast.makeText(getContext(), "Ошибка: " + serverResponse.getStatus(), Toast.LENGTH_SHORT).show();
+                        Log.e("Ошибка: ", serverResponse.getStatus() + "");
+                    }
                 }
 
                 // если произошла ошибка
@@ -148,6 +220,7 @@ public class TaskListFragment extends Fragment {
                 public void onFailure(Call<ServerResponse> call, Throwable t) {
                     // выводим сообщение с ошибкой
                     Toast.makeText(getContext(), "Ошибка: " + t, Toast.LENGTH_SHORT).show();
+                    Log.e("Ошибка: ", t + "");
                 }
             });
             // возвращаем null, т.к. это процесс ничего не должен возвращать
@@ -190,6 +263,13 @@ public class TaskListFragment extends Fragment {
             textView = (TextView) itemView.findViewById(R.id.list_item_task_date_text_view);
             // получаем чек-бокс, решена ли задача
             solvedCheckBox = (CheckBox) itemView.findViewById(R.id.list_item_task_solved_check_box);
+            // вешаем обработчик нажатия
+            solvedCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                // Назначение флага раскрытия преступления
+                task.setSolved(isChecked);
+                // обновляем её состояние в базе данных
+                TaskDBHolder.get(getActivity()).updateTask(task);
+            });
             // вешаем оброаботчик кликов
             itemView.setOnClickListener(this);
         }
