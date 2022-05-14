@@ -19,7 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
 import com.example.myapplication.data.Task;
-import com.example.myapplication.data.CrimeLab;
+import com.example.myapplication.data.TaskHolder;
 
 import java.util.UUID;
 
@@ -38,15 +38,15 @@ public class CrimeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         Log.e("CRIMEFRAGMENT ", crimeId + "");
-        mTask = CrimeLab.get(getActivity()).getCrime(crimeId);
+        mTask = TaskHolder.get(getActivity()).getTask(crimeId);
         Log.e("CRIMEFRAGMENT", mTask.toString());
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        CrimeLab.get(getActivity())
-                .updateCrime(mTask);
+        TaskHolder.get(getActivity())
+                .updateTask(mTask);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class CrimeFragment extends Fragment {
                 builder.setMessage("Do you want to stop ?");
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        CrimeLab.get(getActivity()).deleteCrime(mTask);
+                        TaskHolder.get(getActivity()).deleteTask(mTask);
                         dialog.dismiss();
                         getActivity().finish();
                     }

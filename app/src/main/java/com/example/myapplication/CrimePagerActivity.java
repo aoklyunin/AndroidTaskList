@@ -11,7 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.myapplication.data.Task;
-import com.example.myapplication.data.CrimeLab;
+import com.example.myapplication.data.TaskHolder;
 import com.example.myapplication.gui.CrimeFragment;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public class CrimePagerActivity extends AppCompatActivity {
                 .getSerializableExtra(EXTRA_CRIME_ID);
 
         mViewPager = (ViewPager) findViewById(R.id.activity_crime_pager_view_pager);
-        mTasks = CrimeLab.get(this).getCrimes();
+        mTasks = TaskHolder.get(this).getTasks();
         FragmentManager fragmentManager = getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override

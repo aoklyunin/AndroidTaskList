@@ -1,6 +1,6 @@
 package com.example.myapplication.db;
 
-public class CrimeDbSchema {
+public class TaskDBSchema {
     public static final class CrimeTable {
         public static final String NAME = "tasks";
 

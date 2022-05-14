@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.myapplication.CrimePagerActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.data.Task;
-import com.example.myapplication.data.CrimeLab;
+import com.example.myapplication.data.TaskHolder;
 
 import java.util.List;
 
@@ -57,8 +57,8 @@ public class CrimeListFragment extends Fragment {
     }
 
     private void updateUI() {
-        CrimeLab crimeLab = CrimeLab.get(getActivity());
-        List<Task> tasks = crimeLab.getCrimes();
+        TaskHolder taskHolder = TaskHolder.get(getActivity());
+        List<Task> tasks = taskHolder.getTasks();
 
         if (mAdapter == null) {
             mAdapter = new CrimeAdapter(tasks);
@@ -137,7 +137,7 @@ public class CrimeListFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.menu_item_new_crime:
                 Task task = new Task();
-                CrimeLab.get(getActivity()).addCrime(task);
+                TaskHolder.get(getActivity()).addTask(task);
                 Intent intent = CrimePagerActivity
                         .newIntent(getActivity(), task.getId());
                 startActivity(intent);
@@ -153,8 +153,8 @@ public class CrimeListFragment extends Fragment {
     }
 
     private void updateSubtitle() {
-        CrimeLab crimeLab = CrimeLab.get(getActivity());
-        int crimeCount = crimeLab.getCrimes().size();
+        TaskHolder taskHolder = TaskHolder.get(getActivity());
+        int crimeCount = taskHolder.getTasks().size();
 
         String subtitle = crimeCount + " crimes";
         if (!mSubtitleVisible) {
