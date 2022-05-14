@@ -68,8 +68,8 @@ public class TaskHolder {
         String uuidString = task.getId().toString();
         // выполняем запрос к базе данных: используем таблицу задач,
         // удаляем все, у которых id равен заданному нами
-        db.delete(TaskDBSchema.CrimeTable.NAME,
-                TaskDBSchema.CrimeTable.Cols.UUID + " = ?",
+        db.delete(TaskDBSchema.TaskTable.NAME,
+                TaskDBSchema.TaskTable.Cols.UUID + " = ?",
                 new String[]{uuidString});
     }
 
@@ -82,7 +82,7 @@ public class TaskHolder {
         // получаем понятное базе данных представление задачи
         ContentValues values = TaskBDHelper.getContentValues(task);
         // отправляем запрос на добавление этой задачи в базу данных
-        db.insert(TaskDBSchema.CrimeTable.NAME, null, values);
+        db.insert(TaskDBSchema.TaskTable.NAME, null, values);
     }
 
     /**
@@ -96,8 +96,8 @@ public class TaskHolder {
         // получаем понятное базе данных представление задачи
         ContentValues values = TaskBDHelper.getContentValues(task);
         // отправляем запрос на обновление этой задачи в базе данных
-        db.update(TaskDBSchema.CrimeTable.NAME, values,
-                TaskDBSchema.CrimeTable.Cols.UUID + " = ?",
+        db.update(TaskDBSchema.TaskTable.NAME, values,
+                TaskDBSchema.TaskTable.Cols.UUID + " = ?",
                 new String[]{uuidString});
     }
 
@@ -111,7 +111,7 @@ public class TaskHolder {
     private TaskCursorWrapper queryTasks(String whereClause, String[] whereArgs) {
         // создаём курсор
         Cursor cursor = db.query(
-                TaskDBSchema.CrimeTable.NAME,
+                TaskDBSchema.TaskTable.NAME,
                 null, // Columns - null выбирает все столбцы
                 whereClause,
                 whereArgs,
@@ -155,7 +155,7 @@ public class TaskHolder {
     public Task getTask(UUID id) {
         // Получаем курсор
         try (TaskCursorWrapper cursor = queryTasks(
-                TaskDBSchema.CrimeTable.Cols.UUID + " = ?",
+                TaskDBSchema.TaskTable.Cols.UUID + " = ?",
                 new String[]{id.toString()}
         )) {
             // если записей нет
