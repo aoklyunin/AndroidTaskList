@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.gui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,11 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import com.example.myapplication.R;
+import com.example.myapplication.data.Crime;
+import com.example.myapplication.data.CrimeLab;
 
 import java.util.Date;
 import java.util.UUID;

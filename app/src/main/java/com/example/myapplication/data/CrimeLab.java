@@ -1,9 +1,13 @@
-package com.example.myapplication;
+package com.example.myapplication.data;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import com.example.myapplication.db.CrimeBaseHelper;
+import com.example.myapplication.db.CrimeCursorWrapper;
+import com.example.myapplication.db.CrimeDbSchema;
 
 import java.util.ArrayList;
 import java.util.List;

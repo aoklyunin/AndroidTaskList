@@ -1,7 +1,9 @@
-package com.example.myapplication;
+package com.example.myapplication.db;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
+
+import com.example.myapplication.data.Crime;
 
 import java.util.Date;
 import java.util.UUID;

@@ -1,11 +1,11 @@
 package com.example.myapplication;
 
-import android.os.Bundle;
 import android.util.Log;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
+
+import com.example.myapplication.gui.CrimeListFragment;
+import com.example.myapplication.gui.SingleFragmentActivity;
 
 public class CrimeListActivity extends SingleFragmentActivity {
     @Override
