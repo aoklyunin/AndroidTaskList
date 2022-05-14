@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class CrimeBaseHelper extends SQLiteOpenHelper {
     private static final int VERSION = 1;
-    private static final String DATABASE_NAME = "crimeBase.db";
+    private static final String DATABASE_NAME = "tasksBase.db";
     public CrimeBaseHelper(Context context) {
         super(context, DATABASE_NAME, null, VERSION);
     }
@@ -17,7 +17,7 @@ public class CrimeBaseHelper extends SQLiteOpenHelper {
                 " _id integer primary key autoincrement, " +
                 CrimeDbSchema.CrimeTable.Cols.UUID + ", " +
                 CrimeDbSchema.CrimeTable.Cols.TITLE + ", " +
-                CrimeDbSchema.CrimeTable.Cols.DATE + ", " +
+                CrimeDbSchema.CrimeTable.Cols.TEXT + ", " +
                 CrimeDbSchema.CrimeTable.Cols.SOLVED +
                 ")"
         );

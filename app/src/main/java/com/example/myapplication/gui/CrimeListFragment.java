@@ -93,7 +93,7 @@ public class CrimeListFragment extends Fragment {
         public void bindCrime(Crime crime) {
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
-            mDateTextView.setText(mCrime.getDate().toString());
+            mDateTextView.setText(mCrime.getText());
             mSolvedCheckBox.setChecked(mCrime.isSolved());
         }
 
@@ -103,7 +103,6 @@ public class CrimeListFragment extends Fragment {
                     mCrime.getId());
             startActivity(intent);
         }
-
 
     }
 

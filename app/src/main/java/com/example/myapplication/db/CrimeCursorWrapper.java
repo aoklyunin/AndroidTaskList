@@ -2,6 +2,7 @@ package com.example.myapplication.db;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
+import android.util.Log;
 
 import com.example.myapplication.data.Crime;
 
@@ -16,12 +17,15 @@ public class CrimeCursorWrapper extends CursorWrapper {
     public Crime getCrime() {
         String uuidString = getString(getColumnIndex(CrimeDbSchema.CrimeTable.Cols.UUID));
         String title = getString(getColumnIndex(CrimeDbSchema.CrimeTable.Cols.TITLE));
-        long date = getLong(getColumnIndex(CrimeDbSchema.CrimeTable.Cols.DATE));
+        String text = getString(getColumnIndex(CrimeDbSchema.CrimeTable.Cols.TEXT));
+
         int isSolved = getInt(getColumnIndex(CrimeDbSchema.CrimeTable.Cols.SOLVED));
         Crime crime = new Crime(UUID.fromString(uuidString));
         crime.setTitle(title);
-        crime.setDate(new Date(date));
+        crime.setText(text);
         crime.setSolved(isSolved != 0);
+
+        Log.e("GOT CRIME",crime.toString());
         return crime;
     }
 }

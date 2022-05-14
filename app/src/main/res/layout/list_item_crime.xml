@@ -24,7 +24,7 @@
         android:id="@+id/list_item_crime_date_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Crime Date"
+        android:text="Crime Text"
         android:layout_toStartOf="@id/list_item_crime_solved_check_box"
         android:layout_below="@id/list_item_crime_title_text_view"
         android:padding="4dp"

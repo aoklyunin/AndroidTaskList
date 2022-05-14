@@ -1,6 +1,8 @@
 package com.example.myapplication.gui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -26,7 +28,7 @@ import java.util.UUID;
 public class CrimeFragment extends Fragment {
     private Crime mCrime;
     private EditText mTitleField;
-    private Button mDateButton;
+    private EditText mDateButton;
     private Button mDeleteButton;
     private CheckBox mSolvedCheckBox;
     private static final String ARG_CRIME_ID = "crime_id";
@@ -75,26 +77,47 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        mDateButton = (Button) v.findViewById(R.id.crime_date);
-        updateDate();
-        mDateButton.setOnClickListener(new View.OnClickListener() {
+        mDateButton = (EditText) v.findViewById(R.id.crime_text);
+        mDateButton.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                FragmentManager manager = getFragmentManager();
-                DatePickerFragment dialog = DatePickerFragment
-                        .newInstance(mCrime.getDate());
-                dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
-                dialog.show(manager, DIALOG_DATE);
+            public void beforeTextChanged(
+                    CharSequence c, int start, int count, int after) {
+                // Здесь намеренно оставлено пустое место
+            }
+
+            @Override
+            public void onTextChanged(
+                    CharSequence c, int start, int before, int count) {
+                mCrime.setText(c.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable c) {
+                // И здесь тоже
             }
         });
-
 
         mDeleteButton = (Button) v.findViewById(R.id.crime_delete);
         mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CrimeLab.get(getActivity()).deleteCrime(mCrime);
-                getActivity().finish();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(R.string.app_name);
+                builder.setMessage("Do you want to stop ?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        CrimeLab.get(getActivity()).deleteCrime(mCrime);
+                        dialog.dismiss();
+                        getActivity().finish();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
 
@@ -108,6 +131,8 @@ public class CrimeFragment extends Fragment {
 
         return v;
     }
+
+
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -123,16 +148,5 @@ public class CrimeFragment extends Fragment {
             return;
         }
 
-        if (requestCode == REQUEST_DATE) {
-            Date date = (Date) data
-                    .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
-            mCrime.setDate(date);
-            updateDate();
-        }
-
     }
-    private void updateDate() {
-        mDateButton.setText(mCrime.getDate().toString());
-    }
-
 }

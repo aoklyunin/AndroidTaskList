@@ -1,22 +1,22 @@
 package com.example.myapplication.data;
 
-import java.util.Date;
 import java.util.UUID;
 
 
 public class Crime {
     private final UUID mId;
     private String title;
-    private Date mDate;
+    private String text;
     private boolean mSolved;
 
     public Crime() {
         this(UUID.randomUUID());
     }
+
     public Crime(UUID id) {
         mId = id;
-        mDate = new Date();
     }
+
     public UUID getId() {
         return mId;
     }
@@ -29,16 +29,29 @@ public class Crime {
         this.title = title;
     }
 
-    public Date getDate() {
-        return mDate;
+    public String getText() {
+        return text;
     }
-    public void setDate(Date date) {
-        mDate = date;
+
+    public void setText(String text) {
+        this.text = text;
     }
+
     public boolean isSolved() {
         return mSolved;
     }
+
     public void setSolved(boolean solved) {
         mSolved = solved;
+    }
+
+    @Override
+    public String toString() {
+        return "Crime{" +
+                "mId=" + mId +
+                ", title='" + title + '\'' +
+                ", text='" + text + '\'' +
+                ", mSolved=" + mSolved +
+                '}';
     }
 }
