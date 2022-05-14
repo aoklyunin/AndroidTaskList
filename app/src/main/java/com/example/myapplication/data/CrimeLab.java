@@ -19,7 +19,7 @@ public class CrimeLab {
     Context mAppContext;
     private Context mContext;
     private SQLiteDatabase mDatabase;
-    private List<Crime> mCrimes;
+    private List<Task> mTasks;
 
 
     public static CrimeLab get(Context context) {
@@ -30,14 +30,14 @@ public class CrimeLab {
         return sCrimeLab;
     }
 
-    public void deleteCrime(Crime crime) {
-        String uuidString = crime.getId().toString();
+    public void deleteCrime(Task task) {
+        String uuidString = task.getId().toString();
         mDatabase.delete(CrimeDbSchema.CrimeTable.NAME,
                 CrimeDbSchema.CrimeTable.Cols.UUID + " = ?",
                 new String[] { uuidString });
     }
 
-    public void addCrime(Crime c) {
+    public void addCrime(Task c) {
         ContentValues values = getContentValues(c);
         mDatabase.insert(CrimeDbSchema.CrimeTable.NAME, null, values);
     }
@@ -66,46 +66,46 @@ public class CrimeLab {
 
     public void populate() {
         for (int i = 0; i < 100; i++) {
-            Crime crime = new Crime();
-            crime.setTitle("Crime #" + i);
-            crime.setSolved(i % 2 == 0); // Для каждого второго объекта
-            mCrimes.add(crime);
+            Task task = new Task();
+            task.setTitle("Crime #" + i);
+            task.setSolved(i % 2 == 0); // Для каждого второго объекта
+            mTasks.add(task);
         }
     }
 
-    private static ContentValues getContentValues(Crime crime) {
+    private static ContentValues getContentValues(Task task) {
         ContentValues values = new ContentValues();
-        values.put(CrimeDbSchema.CrimeTable.Cols.UUID, crime.getId().toString());
-        values.put(CrimeDbSchema.CrimeTable.Cols.TITLE, crime.getTitle());
-        values.put(CrimeDbSchema.CrimeTable.Cols.TEXT, crime.getText());
-        values.put(CrimeDbSchema.CrimeTable.Cols.SOLVED, crime.isSolved() ? 1 : 0);
+        values.put(CrimeDbSchema.CrimeTable.Cols.UUID, task.getId().toString());
+        values.put(CrimeDbSchema.CrimeTable.Cols.TITLE, task.getTitle());
+        values.put(CrimeDbSchema.CrimeTable.Cols.TEXT, task.getText());
+        values.put(CrimeDbSchema.CrimeTable.Cols.SOLVED, task.isSolved() ? 1 : 0);
         return values;
     }
 
-    public List<Crime> getCrimes() {
-        List<Crime> crimes = new ArrayList<>();
+    public List<Task> getCrimes() {
+        List<Task> tasks = new ArrayList<>();
         CrimeCursorWrapper cursor = queryCrimes(null, null);
         try {
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                crimes.add(cursor.getCrime());
+                tasks.add(cursor.getCrime());
                 cursor.moveToNext();
             }
         } finally {
             cursor.close();
         }
-        return crimes;
+        return tasks;
     }
 
-    public void updateCrime(Crime crime) {
-        String uuidString = crime.getId().toString();
-        ContentValues values = getContentValues(crime);
+    public void updateCrime(Task task) {
+        String uuidString = task.getId().toString();
+        ContentValues values = getContentValues(task);
         mDatabase.update(CrimeDbSchema.CrimeTable.NAME, values,
                 CrimeDbSchema.CrimeTable.Cols.UUID + " = ?",
                 new String[] { uuidString });
     }
 
-    public Crime getCrime(UUID id) {
+    public Task getCrime(UUID id) {
         CrimeCursorWrapper cursor = queryCrimes(
                 CrimeDbSchema.CrimeTable.Cols.UUID + " = ?",
                         new String[] { id.toString() }

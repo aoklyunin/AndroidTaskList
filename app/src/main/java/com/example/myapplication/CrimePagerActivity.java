@@ -10,7 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.myapplication.data.Crime;
+import com.example.myapplication.data.Task;
 import com.example.myapplication.data.CrimeLab;
 import com.example.myapplication.gui.CrimeFragment;
 
@@ -19,7 +19,7 @@ import java.util.UUID;
 
 public class CrimePagerActivity extends AppCompatActivity {
     private ViewPager mViewPager;
-    private List<Crime> mCrimes;
+    private List<Task> mTasks;
 
     private static final String EXTRA_CRIME_ID =
             "com.bignerdranch.android.criminalintent.crime_id";
@@ -39,22 +39,22 @@ public class CrimePagerActivity extends AppCompatActivity {
                 .getSerializableExtra(EXTRA_CRIME_ID);
 
         mViewPager = (ViewPager) findViewById(R.id.activity_crime_pager_view_pager);
-        mCrimes = CrimeLab.get(this).getCrimes();
+        mTasks = CrimeLab.get(this).getCrimes();
         FragmentManager fragmentManager = getSupportFragmentManager();
         mViewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
             @Override
             public Fragment getItem(int position) {
-                Crime crime = mCrimes.get(position);
-                return CrimeFragment.newInstance(crime.getId());
+                Task task = mTasks.get(position);
+                return CrimeFragment.newInstance(task.getId());
             }
 
             @Override
             public int getCount() {
-                return mCrimes.size();
+                return mTasks.size();
             }
         });
-        for (int i = 0; i < mCrimes.size(); i++) {
-            if (mCrimes.get(i).getId().equals(crimeId)) {
+        for (int i = 0; i < mTasks.size(); i++) {
+            if (mTasks.get(i).getId().equals(crimeId)) {
                 mViewPager.setCurrentItem(i);
                 break;
             }

@@ -16,19 +16,17 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import com.example.myapplication.R;
-import com.example.myapplication.data.Crime;
+import com.example.myapplication.data.Task;
 import com.example.myapplication.data.CrimeLab;
 
-import java.util.Date;
 import java.util.UUID;
 
 public class CrimeFragment extends Fragment {
-    private Crime mCrime;
+    private Task mTask;
     private EditText mTitleField;
-    private EditText mDateButton;
+    private EditText textField;
     private Button mDeleteButton;
     private CheckBox mSolvedCheckBox;
     private static final String ARG_CRIME_ID = "crime_id";
@@ -40,15 +38,15 @@ public class CrimeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         UUID crimeId = (UUID) getArguments().getSerializable(ARG_CRIME_ID);
         Log.e("CRIMEFRAGMENT ", crimeId + "");
-        mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
-        Log.e("CRIMEFRAGMENT", mCrime.toString());
+        mTask = CrimeLab.get(getActivity()).getCrime(crimeId);
+        Log.e("CRIMEFRAGMENT", mTask.toString());
     }
 
     @Override
     public void onPause() {
         super.onPause();
         CrimeLab.get(getActivity())
-                .updateCrime(mCrime);
+                .updateCrime(mTask);
     }
 
     @Override
@@ -57,7 +55,7 @@ public class CrimeFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
 
         mTitleField = (EditText) v.findViewById(R.id.crime_title);
-        mTitleField.setText(mCrime.getTitle());
+        mTitleField.setText(mTask.getTitle());
         mTitleField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(
@@ -68,7 +66,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onTextChanged(
                     CharSequence c, int start, int before, int count) {
-                mCrime.setTitle(c.toString());
+                mTask.setTitle(c.toString());
             }
 
             @Override
@@ -77,8 +75,9 @@ public class CrimeFragment extends Fragment {
             }
         });
 
-        mDateButton = (EditText) v.findViewById(R.id.crime_text);
-        mDateButton.addTextChangedListener(new TextWatcher() {
+        textField = (EditText) v.findViewById(R.id.crime_text);
+        textField.setText(mTask.getText());
+        textField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(
                     CharSequence c, int start, int count, int after) {
@@ -88,7 +87,7 @@ public class CrimeFragment extends Fragment {
             @Override
             public void onTextChanged(
                     CharSequence c, int start, int before, int count) {
-                mCrime.setText(c.toString());
+                mTask.setText(c.toString());
             }
 
             @Override
@@ -106,7 +105,7 @@ public class CrimeFragment extends Fragment {
                 builder.setMessage("Do you want to stop ?");
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        CrimeLab.get(getActivity()).deleteCrime(mCrime);
+                        CrimeLab.get(getActivity()).deleteCrime(mTask);
                         dialog.dismiss();
                         getActivity().finish();
                     }
@@ -122,11 +121,11 @@ public class CrimeFragment extends Fragment {
         });
 
         mSolvedCheckBox = (CheckBox) v.findViewById(R.id.crime_solved);
-        mSolvedCheckBox.setChecked(mCrime.isSolved());
+        mSolvedCheckBox.setChecked(mTask.isSolved());
 
         mSolvedCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // Назначение флага раскрытия преступления
-            mCrime.setSolved(isChecked);
+            mTask.setSolved(isChecked);
         });
 
         return v;

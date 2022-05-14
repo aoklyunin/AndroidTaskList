@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myapplication.CrimePagerActivity;
 import com.example.myapplication.R;
-import com.example.myapplication.data.Crime;
+import com.example.myapplication.data.Task;
 import com.example.myapplication.data.CrimeLab;
 
 import java.util.List;
@@ -58,13 +58,13 @@ public class CrimeListFragment extends Fragment {
 
     private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
-        List<Crime> crimes = crimeLab.getCrimes();
+        List<Task> tasks = crimeLab.getCrimes();
 
         if (mAdapter == null) {
-            mAdapter = new CrimeAdapter(crimes);
+            mAdapter = new CrimeAdapter(tasks);
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.setCrimes(crimes);
+            mAdapter.setCrimes(tasks);
             mAdapter.notifyDataSetChanged();
         }
 
@@ -76,7 +76,7 @@ public class CrimeListFragment extends Fragment {
         private TextView mTitleTextView;
         private TextView mDateTextView;
         private CheckBox mSolvedCheckBox;
-        private Crime mCrime;
+        private Task mTask;
 
         public CrimeHolder(View itemView) {
             super(itemView);
@@ -90,17 +90,17 @@ public class CrimeListFragment extends Fragment {
 
         }
 
-        public void bindCrime(Crime crime) {
-            mCrime = crime;
-            mTitleTextView.setText(mCrime.getTitle());
-            mDateTextView.setText(mCrime.getText());
-            mSolvedCheckBox.setChecked(mCrime.isSolved());
+        public void bindCrime(Task task) {
+            mTask = task;
+            mTitleTextView.setText(mTask.getTitle());
+            mDateTextView.setText(mTask.getText());
+            mSolvedCheckBox.setChecked(mTask.isSolved());
         }
 
         @Override
         public void onClick(View v) {
             Intent intent = CrimePagerActivity.newIntent(getActivity(),
-                    mCrime.getId());
+                    mTask.getId());
             startActivity(intent);
         }
 
@@ -136,10 +136,10 @@ public class CrimeListFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_new_crime:
-                Crime crime = new Crime();
-                CrimeLab.get(getActivity()).addCrime(crime);
+                Task task = new Task();
+                CrimeLab.get(getActivity()).addCrime(task);
                 Intent intent = CrimePagerActivity
-                        .newIntent(getActivity(), crime.getId());
+                        .newIntent(getActivity(), task.getId());
                 startActivity(intent);
                 return true;
             case R.id.menu_item_show_subtitle:
@@ -174,10 +174,10 @@ public class CrimeListFragment extends Fragment {
 
 
     private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
-        private List<Crime> mCrimes;
+        private List<Task> mTasks;
 
-        public CrimeAdapter(List<Crime> crimes) {
-            mCrimes = crimes;
+        public CrimeAdapter(List<Task> tasks) {
+            mTasks = tasks;
         }
 
         @Override
@@ -190,17 +190,17 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(CrimeHolder holder, int position) {
-            Crime crime = mCrimes.get(position);
-            holder.bindCrime(crime);
+            Task task = mTasks.get(position);
+            holder.bindCrime(task);
         }
 
         @Override
         public int getItemCount() {
-            return mCrimes.size();
+            return mTasks.size();
         }
 
-        public void setCrimes(List<Crime> crimes) {
-            mCrimes = crimes;
+        public void setCrimes(List<Task> tasks) {
+            mTasks = tasks;
         }
     }
 

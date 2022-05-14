@@ -4,9 +4,8 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.util.Log;
 
-import com.example.myapplication.data.Crime;
+import com.example.myapplication.data.Task;
 
-import java.util.Date;
 import java.util.UUID;
 
 public class CrimeCursorWrapper extends CursorWrapper {
@@ -14,18 +13,18 @@ public class CrimeCursorWrapper extends CursorWrapper {
         super(cursor);
     }
 
-    public Crime getCrime() {
+    public Task getCrime() {
         String uuidString = getString(getColumnIndex(CrimeDbSchema.CrimeTable.Cols.UUID));
         String title = getString(getColumnIndex(CrimeDbSchema.CrimeTable.Cols.TITLE));
         String text = getString(getColumnIndex(CrimeDbSchema.CrimeTable.Cols.TEXT));
 
         int isSolved = getInt(getColumnIndex(CrimeDbSchema.CrimeTable.Cols.SOLVED));
-        Crime crime = new Crime(UUID.fromString(uuidString));
-        crime.setTitle(title);
-        crime.setText(text);
-        crime.setSolved(isSolved != 0);
+        Task task = new Task(UUID.fromString(uuidString));
+        task.setTitle(title);
+        task.setText(text);
+        task.setSolved(isSolved != 0);
 
-        Log.e("GOT CRIME",crime.toString());
-        return crime;
+        Log.e("GOT CRIME", task.toString());
+        return task;
     }
 }
