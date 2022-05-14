@@ -5,19 +5,20 @@ import java.util.UUID;
 
 
 public class Crime {
-    private final UUID id;
+    private final UUID mId;
     private String title;
     private Date mDate;
     private boolean mSolved;
 
     public Crime() {
-        // Генерирование уникального идентификатора
-        id = UUID.randomUUID();
+        this(UUID.randomUUID());
+    }
+    public Crime(UUID id) {
+        mId = id;
         mDate = new Date();
     }
-
     public UUID getId() {
-        return id;
+        return mId;
     }
 
     public String getTitle() {

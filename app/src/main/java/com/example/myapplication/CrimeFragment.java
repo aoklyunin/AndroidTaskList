@@ -24,6 +24,7 @@ public class CrimeFragment extends Fragment {
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
+    private Button mDeleteButton;
     private CheckBox mSolvedCheckBox;
     private static final String ARG_CRIME_ID = "crime_id";
     private static final String DIALOG_DATE = "DialogDate";
@@ -36,6 +37,13 @@ public class CrimeFragment extends Fragment {
         Log.e("CRIMEFRAGMENT ", crimeId + "");
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
         Log.e("CRIMEFRAGMENT", mCrime.toString());
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        CrimeLab.get(getActivity())
+                .updateCrime(mCrime);
     }
 
     @Override
@@ -74,6 +82,16 @@ public class CrimeFragment extends Fragment {
                         .newInstance(mCrime.getDate());
                 dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
                 dialog.show(manager, DIALOG_DATE);
+            }
+        });
+
+
+        mDeleteButton = (Button) v.findViewById(R.id.crime_delete);
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CrimeLab.get(getActivity()).deleteCrime(mCrime);
+                getActivity().finish();
             }
         });
 
