@@ -10,7 +10,7 @@
         android:text="@string/crime_title_label"
         style="?android:listSeparatorTextViewStyle"
         />
-    <EditText android:id="@+id/crime_title"
+    <EditText android:id="@+id/task_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -29,7 +29,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         />
-    <CheckBox android:id="@+id/crime_solved"
+    <CheckBox android:id="@+id/task_solved"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"

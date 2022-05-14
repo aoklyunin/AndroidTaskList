@@ -11,7 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.myapplication.data.Task;
-import com.example.myapplication.data.TaskHolder;
+import com.example.myapplication.data.TaskDBHolder;
 import com.example.myapplication.gui.TaskFragment;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class TaskPagerActivity extends AppCompatActivity {
     /**
      * Список задач
      */
-    private List<Task> mTasks;
+    private List<Task> tasks;
 
     /**
      * Константа для передачи значений в интентах
@@ -54,13 +54,13 @@ public class TaskPagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // задаём разметку
-        setContentView(R.layout.activity_crime_pager);
+        setContentView(R.layout.activity_task_pager);
         // получаем id задачи из интента
         UUID taskId = (UUID) getIntent().getSerializableExtra(EXTRA_TASK_ID);
         // создаём объект перемещения между задачами
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.activity_crime_pager_view_pager);
+        ViewPager mViewPager = (ViewPager) findViewById(R.id.activity_task_pager_view_pager);
         // получаем задачи
-        mTasks = TaskHolder.get(this).getTasks();
+        tasks = TaskDBHolder.get(this).getTasks();
         // создаём менеджер фрагментов
         FragmentManager fragmentManager = getSupportFragmentManager();
         // задаём адаптер для переключения между задачами
@@ -69,7 +69,7 @@ public class TaskPagerActivity extends AppCompatActivity {
             @Override
             public Fragment getItem(int position) {
                 // получаем задачу по положению
-                Task task = mTasks.get(position);
+                Task task = tasks.get(position);
                 // создаём новый фрагмент на основе id задачи
                 return TaskFragment.newInstance(task.getId());
             }
@@ -78,13 +78,13 @@ public class TaskPagerActivity extends AppCompatActivity {
             @Override
             public int getCount() {
                 // возвращаем кол-во задач
-                return mTasks.size();
+                return tasks.size();
             }
         });
         // перебираем задачи
-        for (int i = 0; i < mTasks.size(); i++) {
+        for (int i = 0; i < tasks.size(); i++) {
             // если id задачи равен id в переключаетеле страниц
-            if (mTasks.get(i).getId().equals(taskId)) {
+            if (tasks.get(i).getId().equals(taskId)) {
                 // задаём соответствующее положение
                 mViewPager.setCurrentItem(i);
                 break;

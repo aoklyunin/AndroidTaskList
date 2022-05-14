@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     >
-    <CheckBox android:id="@+id/list_item_crime_solved_check_box"
+    <CheckBox android:id="@+id/list_item_task_solved_check_box"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -12,21 +12,21 @@
         />
 
     <TextView
-        android:id="@+id/list_item_crime_title_text_view"
+        android:id="@+id/list_item_task_title_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Crime Title"
         android:textStyle="bold"
-        android:layout_toStartOf="@id/list_item_crime_solved_check_box"
+        android:layout_toStartOf="@id/list_item_task_solved_check_box"
         android:padding="4dp"
         />
     <TextView
-        android:id="@+id/list_item_crime_date_text_view"
+        android:id="@+id/list_item_task_date_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Crime Text"
-        android:layout_toStartOf="@id/list_item_crime_solved_check_box"
-        android:layout_below="@id/list_item_crime_title_text_view"
+        android:layout_toStartOf="@id/list_item_task_solved_check_box"
+        android:layout_below="@id/list_item_task_title_text_view"
         android:padding="4dp"
         />
 

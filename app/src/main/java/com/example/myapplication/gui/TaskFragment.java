@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.R;
 import com.example.myapplication.data.Task;
-import com.example.myapplication.data.TaskHolder;
+import com.example.myapplication.data.TaskDBHolder;
 
 import java.util.UUID;
 
@@ -26,7 +26,7 @@ public class TaskFragment extends Fragment {
     /**
      * Задача
      */
-    private Task mTask;
+    private Task task;
     /**
      * Ключ для получения id задачи из намерения
      */
@@ -43,7 +43,7 @@ public class TaskFragment extends Fragment {
         // получаем id из аргументов
         UUID taskId = (UUID) getArguments().getSerializable(ARG_TASK_ID);
         // получаем задачу по её id
-        mTask = TaskHolder.get(getActivity()).getTask(taskId);
+        task = TaskDBHolder.get(getActivity()).getTask(taskId);
     }
 
     /**
@@ -53,7 +53,7 @@ public class TaskFragment extends Fragment {
     public void onPause() {
         super.onPause();
         // обновляем задачу
-        TaskHolder.get(getActivity()).updateTask(mTask);
+        TaskDBHolder.get(getActivity()).updateTask(task);
     }
 
     /**
@@ -67,11 +67,11 @@ public class TaskFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // формируем представление на основе разметки
-        View v = inflater.inflate(R.layout.fragment_crime, container, false);
+        View v = inflater.inflate(R.layout.fragment_task, container, false);
         // Получаем поле ввода заголовка
-        EditText mTitleField = (EditText) v.findViewById(R.id.crime_title);
+        EditText mTitleField = (EditText) v.findViewById(R.id.task_title);
         // задаём ему значение заголовка задачи
-        mTitleField.setText(mTask.getTitle());
+        mTitleField.setText(task.getTitle());
         // вешаем обработчик изменения текста
         mTitleField.addTextChangedListener(new TextWatcher() {
             // операция перед изменением текста
@@ -84,7 +84,7 @@ public class TaskFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence c, int start, int before, int count) {
                 // задаём новый заголовок задаче
-                mTask.setTitle(c.toString());
+                task.setTitle(c.toString());
             }
 
             // операция после изменения текста
@@ -94,9 +94,9 @@ public class TaskFragment extends Fragment {
             }
         });
         // Получаем поле ввода текста
-        EditText textField = (EditText) v.findViewById(R.id.crime_text);
+        EditText textField = (EditText) v.findViewById(R.id.task_text);
         // задаём ему значение текста задачи
-        textField.setText(mTask.getText());
+        textField.setText(task.getText());
         // вешаем обработчик изменения текста
         textField.addTextChangedListener(new TextWatcher() {
             // операция перед изменением текста
@@ -108,7 +108,7 @@ public class TaskFragment extends Fragment {
             // обработчик изменения текста
             @Override
             public void onTextChanged(CharSequence c, int start, int before, int count) {
-                mTask.setText(c.toString());
+                task.setText(c.toString());
             }
 
             // операция после изменения текста
@@ -119,7 +119,7 @@ public class TaskFragment extends Fragment {
         });
 
         // Получаем кнопку удаления
-        Button mDeleteButton = (Button) v.findViewById(R.id.crime_delete);
+        Button mDeleteButton = (Button) v.findViewById(R.id.task_delete);
         // вешаем обработчик нажатия
         mDeleteButton.setOnClickListener(view -> {
             // получаем строителя диалогов
@@ -131,7 +131,7 @@ public class TaskFragment extends Fragment {
             // определяем кнопку да
             builder.setPositiveButton(R.string.confirm_delete_yes, (dialog, id) -> {
                 // удаляем задачу
-                TaskHolder.get(getActivity()).deleteTask(mTask);
+                TaskDBHolder.get(getActivity()).deleteTask(task);
                 // скрываем диалог
                 dialog.dismiss();
                 // закрываем активнрость
@@ -146,13 +146,13 @@ public class TaskFragment extends Fragment {
         });
 
         // получаем чек-бокс
-        CheckBox mSolvedCheckBox = (CheckBox) v.findViewById(R.id.crime_solved);
+        CheckBox mSolvedCheckBox = (CheckBox) v.findViewById(R.id.task_solved);
         // задаём ему значение в соответствии с состоянием задачи
-        mSolvedCheckBox.setChecked(mTask.isSolved());
+        mSolvedCheckBox.setChecked(task.isSolved());
         // вешаем обработчик нажатия
         mSolvedCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // Назначение флага раскрытия преступления
-            mTask.setSolved(isChecked);
+            task.setSolved(isChecked);
         });
 
         return v;

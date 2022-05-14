@@ -16,11 +16,11 @@ import java.util.UUID;
 /**
  * Класс-синглтон в помощь для работы с задачами
  */
-public class TaskHolder {
+public class TaskDBHolder {
     /**
      * Единственный экземпляр класса
      */
-    private static TaskHolder taskHolder;
+    private static TaskDBHolder taskDBHolder;
     /**
      * Контекст приложения
      */
@@ -36,14 +36,14 @@ public class TaskHolder {
      * @param context - контект приложения
      * @return синглтон-объект
      */
-    public static TaskHolder get(Context context) {
+    public static TaskDBHolder get(Context context) {
         // если объект ещё не создан
-        if (taskHolder == null) {
+        if (taskDBHolder == null) {
             // создаём его на основе нотекста приложения
-            taskHolder = new TaskHolder(context);
+            taskDBHolder = new TaskDBHolder(context);
         }
         // возвращаем объект
-        return taskHolder;
+        return taskDBHolder;
     }
 
     /**
@@ -51,7 +51,7 @@ public class TaskHolder {
      *
      * @param context - контектс приложения
      */
-    private TaskHolder(Context context) {
+    private TaskDBHolder(Context context) {
         // получаем контекст приложения
         this.context = context.getApplicationContext();
         // создаём помощника для работы с базой данных
