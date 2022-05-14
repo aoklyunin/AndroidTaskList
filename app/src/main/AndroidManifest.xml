@@ -11,11 +11,11 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".CrimePagerActivity"
+            android:name=".TaskPagerActivity"
             android:exported="false"
-            android:parentActivityName=".CrimeListActivity"/>
+            android:parentActivityName=".TaskListActivity"/>
         <activity
-            android:name=".CrimeListActivity"
+            android:name=".TaskListActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

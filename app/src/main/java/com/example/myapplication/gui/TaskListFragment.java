@@ -12,27 +12,29 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.CrimePagerActivity;
+import com.example.myapplication.TaskPagerActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.data.Task;
 import com.example.myapplication.data.TaskHolder;
 
 import java.util.List;
 
-public class CrimeListFragment extends Fragment {
-
-    private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
-
-
-    private RecyclerView mCrimeRecyclerView;
-
-    private CrimeAdapter mAdapter;
-    private boolean mSubtitleVisible;
+/**
+ * Фрагмент списка задач
+ */
+public class TaskListFragment extends Fragment {
+    /**
+     * представление списка фрагментов
+     */
+    private RecyclerView mTaskRecyclerView;
+    /**
+     * Адаптер задач
+     */
+    private TaskAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,15 +42,10 @@ public class CrimeListFragment extends Fragment {
         Log.e("LIST", "On create list");
         View view = inflater.inflate(R.layout.fragment_crime_list, container,
                 false);
-        mCrimeRecyclerView = (RecyclerView) view
+        mTaskRecyclerView = (RecyclerView) view
                 .findViewById(R.id.crime_recycler_view);
-        mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager
+        mTaskRecyclerView.setLayoutManager(new LinearLayoutManager
                 (getActivity()));
-
-        if (savedInstanceState != null) {
-            mSubtitleVisible = savedInstanceState.getBoolean
-                    (SAVED_SUBTITLE_VISIBLE);
-        }
 
         updateUI();
 
@@ -61,14 +58,13 @@ public class CrimeListFragment extends Fragment {
         List<Task> tasks = taskHolder.getTasks();
 
         if (mAdapter == null) {
-            mAdapter = new CrimeAdapter(tasks);
-            mCrimeRecyclerView.setAdapter(mAdapter);
+            mAdapter = new TaskAdapter(tasks);
+            mTaskRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.setCrimes(tasks);
             mAdapter.notifyDataSetChanged();
         }
 
-        updateSubtitle();
     }
 
 
@@ -99,7 +95,7 @@ public class CrimeListFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            Intent intent = CrimePagerActivity.newIntent(getActivity(),
+            Intent intent = TaskPagerActivity.newIntent(getActivity(),
                     mTask.getId());
             startActivity(intent);
         }
@@ -117,12 +113,6 @@ public class CrimeListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_crime_list, menu);
 
-        MenuItem subtitleItem = menu.findItem(R.id.menu_item_show_subtitle);
-        if (mSubtitleVisible) {
-            subtitleItem.setTitle(R.string.hide_subtitle);
-        } else {
-            subtitleItem.setTitle(R.string.show_subtitle);
-        }
     }
 
     @Override
@@ -138,45 +128,20 @@ public class CrimeListFragment extends Fragment {
             case R.id.menu_item_new_crime:
                 Task task = new Task();
                 TaskHolder.get(getActivity()).addTask(task);
-                Intent intent = CrimePagerActivity
+                Intent intent = TaskPagerActivity
                         .newIntent(getActivity(), task.getId());
                 startActivity(intent);
-                return true;
-            case R.id.menu_item_show_subtitle:
-                mSubtitleVisible = !mSubtitleVisible;
-                getActivity().invalidateOptionsMenu();
-                updateSubtitle();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void updateSubtitle() {
-        TaskHolder taskHolder = TaskHolder.get(getActivity());
-        int crimeCount = taskHolder.getTasks().size();
 
-        String subtitle = crimeCount + " crimes";
-        if (!mSubtitleVisible) {
-            subtitle = null;
-        }
-
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.getSupportActionBar().setSubtitle(subtitle);
-    }
-
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
-    }
-
-
-    private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder> {
+    private class TaskAdapter extends RecyclerView.Adapter<CrimeHolder> {
         private List<Task> mTasks;
 
-        public CrimeAdapter(List<Task> tasks) {
+        public TaskAdapter(List<Task> tasks) {
             mTasks = tasks;
         }
 

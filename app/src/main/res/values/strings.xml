@@ -13,4 +13,7 @@
     <string name="hide_subtitle">Hide Subtitle</string>
     <string name="delete_task_btn">Удалить</string>
     <string name="crime_text_hint">Текст заметки</string>
+    <string name="confirm_delete_question">Вы уверены, что хотите удалить задачу</string>
+    <string name="confirm_delete_yes">Да</string>
+    <string name="confirm_delete_no">Нет</string>
 </resources>
