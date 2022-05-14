@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/AndroidSDK/platforms/android-31/data/res/layout/simple_list_item_1.xml" value="0.28703703703703703" />
+        <entry key="..\:/Programming/AndroidTaskList/app/src/main/res/layout/fragment_task_list.xml" value="0.23333333333333334" />
+        <entry key="..\:/Programming/AndroidTaskList/app/src/main/res/xml/network_security_config.xml" value="0.23333333333333334" />
         <entry key="..\:/Programming/SamsungTask/app/src/main/res/layout/fragment_crime.xml" value="0.1" />
         <entry key="..\:/Programming/SamsungTask/app/src/main/res/layout/fragment_crime_list.xml" value="0.1" />
         <entry key="..\:/Programming/SamsungTask/app/src/main/res/layout/fragment_login.xml" value="0.1" />

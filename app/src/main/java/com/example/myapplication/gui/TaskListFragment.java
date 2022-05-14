@@ -1,15 +1,19 @@
 package com.example.myapplication.gui;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,8 +23,17 @@ import com.example.myapplication.TaskPagerActivity;
 import com.example.myapplication.R;
 import com.example.myapplication.data.Task;
 import com.example.myapplication.data.TaskDBHolder;
+import com.example.myapplication.req.JsontestAPI;
+import com.example.myapplication.req.ServerResponse;
+import com.example.myapplication.req.TasksRequest;
 
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Фрагмент списка задач
@@ -52,6 +65,15 @@ public class TaskListFragment extends Fragment {
         taskRecyclerView = (RecyclerView) view.findViewById(R.id.task_recycler_view);
         // вешаем на него обработчик разметки
         taskRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        // получаем кнопку отправки
+        Button sendButton = view.findViewById(R.id.auth_btn);
+        // вешаем обработчик нажатия
+        sendButton.setOnClickListener(view1 -> {
+            // содаём асинхронную задачу
+            SendAsyncTask sendTask = new SendAsyncTask();
+            // запускаем отправку задач
+            sendTask.execute();
+        });
         // обновляем интерфейс
         updateUI();
         // возвращаем представление
@@ -76,8 +98,63 @@ public class TaskListFragment extends Fragment {
             // говорим адаптеру, тчо надо обновить данные
             adapter.notifyDataSetChanged();
         }
-
     }
+
+    /**
+     * Класс асинхронной задачи для отправки
+     */
+    private class SendAsyncTask extends AsyncTask<Void, Void, Void> {
+        /**
+         * Фоновое выполнение
+         *
+         * @param voids - аргументов нет
+         * @return - возвращаем null
+         */
+        @Override
+        protected Void doInBackground(Void... voids) {
+            // создаём клиент retrofit
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://buran-it-sch.herokuapp.com/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            // Создаём объект для запросов
+            JsontestAPI api = retrofit.create(JsontestAPI.class);
+
+            // получаем помощник для работы с задачами
+            TaskDBHolder taskDBHolder = TaskDBHolder.get(getActivity());
+            // получаем список задач
+            List<Task> tasks = taskDBHolder.getTasks();
+            // формируем запрос
+            Call<ServerResponse> serverCall = api.add(new TasksRequest(
+                    "droid", tasks
+            ));
+            // выполняем запрос
+            serverCall.enqueue(new Callback<ServerResponse>() {
+                // если получен ответ сервера
+                @Override
+                public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
+                    // получаем тело ответа сервера
+                    ServerResponse serverResponse = response.body();
+                    if (serverResponse.getStatus().equals("ok"))
+                        // выводим сообщение об удачной отправке
+                        Toast.makeText(getContext(), "Задачи отправлены", Toast.LENGTH_SHORT).show();
+                    else
+                        // выводим сообщение об ошибке
+                        Toast.makeText(getContext(), "Ошибка: " + serverResponse.getStatus(), Toast.LENGTH_SHORT).show();
+                }
+
+                // если произошла ошибка
+                @Override
+                public void onFailure(Call<ServerResponse> call, Throwable t) {
+                    // выводим сообщение с ошибкой
+                    Toast.makeText(getContext(), "Ошибка: " + t, Toast.LENGTH_SHORT).show();
+                }
+            });
+            // возвращаем null, т.к. это процесс ничего не должен возвращать
+            return null;
+        }
+    }
+
 
     /**
      * Помощник для работы с задачами в списке
