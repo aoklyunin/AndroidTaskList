@@ -8,7 +8,7 @@
 
 ![server](imgs/server.png)
 
-Его исходники можно скачать найти [здесь](https://github.com/aoklyunin/AndroidTasksServer)
+Исходники сервера лежат [здесь](https://github.com/aoklyunin/AndroidTasksServer)
 
 Перед первой отправкой Вам необходимо указать свой логин, чтобы отправить задачи на сервер.
 
